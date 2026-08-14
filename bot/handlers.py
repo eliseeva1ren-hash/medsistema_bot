@@ -138,11 +138,8 @@ async def _save_phone(message: Message, state: FSMContext, phone: str):
         await _show_confirmation(message, state)
         return
     await state.set_state(Booking.direction)
-    await message.answer(
-        "Шаг 4 из 5.\nВыберите направление:",
-        reply_markup=kb.remove_keyboard(),
-    )
-    await message.answer("Выберите один из вариантов:", reply_markup=kb.directions_keyboard())
+    await message.answer("Телефон принят.", reply_markup=kb.remove_keyboard())
+    await message.answer("Шаг 4 из 5.\nВыберите направление:", reply_markup=kb.directions_keyboard())
 
 
 # ---------- Шаг 4а: направление ----------
