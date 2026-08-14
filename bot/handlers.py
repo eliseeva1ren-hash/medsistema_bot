@@ -6,7 +6,7 @@
 import logging
 
 from aiogram import Router, F, Bot
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
@@ -146,8 +146,15 @@ async def _save_phone(message: Message, state: FSMContext, phone: str):
 
 
 # ---------- Шаг 4а: направление ----------
+# Кнопки направления остаются в чате и после выбора, поэтому разрешаем
+# нажать другую кнопку "dir:" и позже — например, если клиент промахнулся
+# и хочет выбрать направление заново (в т.ч. уже находясь на выборе врача,
+# на свободном тексте или на шаге даты).
 
-@router.callback_query(Booking.direction, F.data.startswith("dir:"))
+@router.callback_query(
+    StateFilter(Booking.direction, Booking.doctor, Booking.custom_request, Booking.appointment_dt),
+    F.data.startswith("dir:"),
+)
 async def process_direction(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split(":", 1)[1]
     label = DIRECTIONS.get(key)
@@ -167,8 +174,13 @@ async def process_direction(callback: CallbackQuery, state: FSMContext):
 
 
 # ---------- Шаг 4б: специализация врача ----------
+# Аналогично: даём переизбрать врача другой кнопкой, даже если клиент уже
+# пошёл дальше и дошёл до шага даты.
 
-@router.callback_query(Booking.doctor, F.data.startswith("spec:"))
+@router.callback_query(
+    StateFilter(Booking.doctor, Booking.appointment_dt),
+    F.data.startswith("spec:"),
+)
 async def process_specialty(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split(":", 1)[1]
     label = SPECIALTIES.get(key)
