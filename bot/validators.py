@@ -3,11 +3,10 @@
 Каждая функция возвращает (ok: bool, error_text: str | None, normalized_value: str | None)
 """
 import re
-from datetime import datetime, date
+from datetime import date
 
 PHONE_RE = re.compile(r"^\+?\d[\d\s\-\(\)]{9,14}\d$")
 DATE_RE = re.compile(r"^(\d{2})\.(\d{2})\.(\d{4})$")
-TIME_RE = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)$")
 
 
 def validate_full_name(text: str):
@@ -53,16 +52,16 @@ def validate_phone(text: str):
     return True, None, normalized
 
 
-def validate_appointment_dt(text: str):
+def validate_appointment_date(text: str):
     text = text.strip()
-    m = re.match(r"^(\d{2})\.(\d{2})\.(\d{4})\s+([01]\d|2[0-3]):([0-5]\d)$", text)
+    m = DATE_RE.match(text)
     if not m:
-        return False, "Введите желаемую дату и время в формате ДД.ММ.ГГГГ ЧЧ:ММ, например: 20.08.2026 14:30.", None
-    day, month, year, hour, minute = map(int, m.groups())
+        return False, "Не получилось распознать дату. Пример: 20.08.2026.", None
+    day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
     try:
-        dt = datetime(year, month, day, hour, minute)
+        d = date(year, month, day)
     except ValueError:
-        return False, "Такой даты/времени не существует. Проверьте значения.", None
-    if dt < datetime.now():
-        return False, "Эта дата и время уже прошли. Укажите, пожалуйста, будущую дату.", None
-    return True, None, dt.strftime("%d.%m.%Y %H:%M")
+        return False, "Такой даты не существует. Проверьте число, месяц и год.", None
+    if d < date.today():
+        return False, "Эта дата уже прошла. Укажите, пожалуйста, сегодняшнюю или будущую дату.", None
+    return True, None, d.strftime("%d.%m.%Y")
