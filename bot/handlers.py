@@ -161,8 +161,7 @@ async def process_direction(callback: CallbackQuery, state: FSMContext):
     else:
         await state.set_state(Booking.custom_request)
         await callback.message.answer(
-            f"«{label}» — напишите, пожалуйста, что именно нужно "
-            "(какое исследование, процедура или вопрос)."
+            f"«{label}» — напишите, что именно вас интересует 👇"
         )
     await callback.answer()
 
@@ -203,7 +202,7 @@ async def _after_direction_chosen(message: Message, state: FSMContext):
     await state.set_state(Booking.appointment_dt)
     await message.answer(
         "Шаг 5 из 5.\nУкажите желаемую дату приёма в формате ДД.ММ.ГГГГ, например: 20.08.2026.\n\n"
-        "Точное время мы подтвердим дополнительно после обработки заявки."
+        "Уточним и подтвердим удобное время после обработки заявки."
     )
 
 
