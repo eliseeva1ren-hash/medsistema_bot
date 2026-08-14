@@ -25,7 +25,7 @@ def validate_birth_date(text: str):
     text = text.strip()
     m = DATE_RE.match(text)
     if not m:
-        return False, "Введите дату рождения в формате ДД.ММ.ГГГГ, например: 05.03.1990.", None
+        return False, "Не получилось распознать дату. Пример: 05.03.1990.", None
     day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
     try:
         d = date(year, month, day)

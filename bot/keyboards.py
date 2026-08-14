@@ -8,13 +8,13 @@ from aiogram.types import (
     KeyboardButton,
     ReplyKeyboardRemove,
 )
-from bot.doctors import DOCTORS
+from bot.doctors import DOCTORS_SHORT
 
 
 def start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="📝 Записаться к врачу", callback_data="start_booking")]
+            [InlineKeyboardButton(text="Записаться на приём", callback_data="start_booking")]
         ]
     )
 
@@ -22,7 +22,7 @@ def start_keyboard() -> InlineKeyboardMarkup:
 def doctors_keyboard() -> InlineKeyboardMarkup:
     rows = [
         [InlineKeyboardButton(text=label, callback_data=f"doc:{key}")]
-        for key, label in DOCTORS.items()
+        for key, label in DOCTORS_SHORT.items()
     ]
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
@@ -43,8 +43,8 @@ def confirm_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="✅ Всё верно, отправить", callback_data="confirm_yes"),
-                InlineKeyboardButton(text="✏️ Начать заново", callback_data="confirm_restart"),
+                InlineKeyboardButton(text="Отправить", callback_data="confirm_yes"),
+                InlineKeyboardButton(text="Изменить", callback_data="confirm_restart"),
             ]
         ]
     )

@@ -35,11 +35,9 @@ def _booking_card(data: dict, username: str, user_id: int) -> str:
 async def cmd_start(message: Message, state: FSMContext):
     await state.clear()
     await message.answer(
-        f"Здравствуйте! Это бот записи на приём в «{config.CLINIC_NAME}».\n\n"
-        f"📍 {config.CLINIC_ADDRESS}\n"
-        f"📞 {config.CLINIC_PHONE}\n"
-        f"🕐 {config.CLINIC_HOURS}\n\n"
-        "Нажмите кнопку ниже, чтобы оставить заявку — это займёт около минуты.",
+        "Здравствуйте! Вы в боте записи в клинику «Медсистема».\n\n"
+        "Записаться на приём — просто: нажмите кнопку ниже и оставьте заявку. "
+        "Это займёт около минуты.",
         reply_markup=kb.start_keyboard(),
     )
 
@@ -144,12 +142,12 @@ async def process_appointment_dt(message: Message, state: FSMContext):
     data = await state.get_data()
     await state.set_state(Booking.confirm)
     summary = (
-        "Проверьте, пожалуйста, данные заявки:\n\n"
-        f"👤 ФИО: {data['full_name']}\n"
-        f"🎂 Дата рождения: {data['birth_date']}\n"
-        f"📞 Телефон: {data['phone']}\n"
-        f"🩺 Врач: {data['doctor_label']}\n"
-        f"🗓 Желаемые дата и время: {data['appointment_dt']}"
+        "Проверьте данные заявки:\n\n"
+        f"👤  {data['full_name']}\n"
+        f"🎂  {data['birth_date']}\n"
+        f"📞  {data['phone']}\n"
+        f"🩺  {data['doctor_label']}\n"
+        f"📅  {data['appointment_dt']}"
     )
     await message.answer(summary, reply_markup=kb.confirm_keyboard())
 
